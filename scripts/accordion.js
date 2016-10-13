@@ -8,34 +8,50 @@
 //     })
 // }
 (function(){
-    //loading all the contents and let you ready to use them
     if(document.readyState != "loading"){
-        handleAccordion();
+        handleAccordion('.accordion');
     }else{
         document.addEventListener("DOMContentLoaded", function(){
-            handleAccordion();
+            handleAccordion('.accordion');
         })
     }
 })();
 
 
-function handleAccordion(){
-    let accordions = document.getElementsByClassName("accordion");
+function handleAccordion(selector){
+    let accordions = document.querySelectorAll(selector);
     for(accordion of accordions){
-        let navis = accordion.getElementsByClassName("acc-navi");
-        for(navi of navis){
 
+        let navis = accordion.querySelectorAll('.acc-navi>.title');
+        for(navi of navis){
             navi.addEventListener("click", function(e){
-                this.classList.toggle('active');
-                // this.nextElementChild.classList('active');
-                let titles = accordion.getElementsByClassName("title");
-                for(title of titles){
-                    title.classList.toggle('active');
-                    //what's the difference between toggle vs toggleclass
-                    //when to use this.classList, when to use element.classList
-                    //how to deal with the side scroll bar?
+                if(!this.parentNode.classList.contains('active')){
+                    closeAll('.accordion','.acc-navi','.title');
                 }
+                this.parentNode.classList.toggle('active');
+                this.classList.toggle('active');
             });
         }
+
+        let subnavis = accordion.querySelectorAll('.acc-sub-navi>.title');
+        for(subnavi of subnavis){
+            subnavi.addEventListener("click", function(e){
+                if(!this.parentNode.classList.contains('active')){
+                    closeAll('.accordion','.acc-sub-navi','.title');
+                }
+                this.parentNode.classList.toggle('active');
+                this.classList.toggle('active');
+            });
+        }
+    }
+}
+
+
+function closeAll(rootNodeSelector, childNodesSelector, titleSelector) {
+    let accordion = document.querySelector(rootNodeSelector);
+    let items = accordion.querySelectorAll(childNodesSelector);
+    for (item of items) {
+        item.classList.remove('active');
+        item.querySelector(titleSelector).classList.remove('active');
     }
 }
